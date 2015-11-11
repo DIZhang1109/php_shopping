@@ -1,5 +1,6 @@
 <?php
-    
+    ob_start(); //set buffer on
+    session_start(); //starting session
 
     //checking if user is not authenticated
 	if (!isset($_SESSION['flag']) || ($_SESSION['flag'] == false))
@@ -12,15 +13,18 @@
 		}
 		else
 		{
-        //save the current page name from the input parameter of WA2014.php
+        //save the current page name from the input parameter of WA2015.php
 		$full_name = $_GET['content_page'];
 		}
 		
 		//Save the file name requested initially
 		$_SESSION['request_page'] = $full_name;
 		//redirecting user to the login page
-		header("Location: http://hyperdisc.unitec.ac.nz/zhangd47/php_assignment/login.php");
+		header("Location: http://hyperdisc.unitec.ac.nz/zhangd47/php_assignment/index.php?content_page=login");
         exit;
     }
-	
+	else
+	{
+	    
+    }
 ?>

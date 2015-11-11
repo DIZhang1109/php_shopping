@@ -1,7 +1,9 @@
 <?php
+$mysqli = new mysqli("localhost", "zhangd47", "15021988", "zhangd47mysql2");
+
 function checkAdmin($username,$password) {
-	$mysqli = new mysqli("localhost", "zhangd47", "15021988", "zhangd47mysql2");
-		
+	global $mysqli;
+	
 	// query the users table for name and surname 
 	$sql = "SELECT * FROM `CUSTOMER` WHERE USERNAME = '".$username."' AND PASSWORD ='".$password."'";
 	$result = $mysqli->query($sql);
@@ -22,8 +24,8 @@ function checkAdmin($username,$password) {
 }
 
 function checkCrendentials($username,$password) {
-	$mysqli = new mysqli("localhost", "zhangd47", "15021988", "zhangd47mysql2");
-		
+	global $mysqli;
+	
 	// query the users table for name and surname 
 	$sql = "SELECT * FROM `CUSTOMER` WHERE USERNAME = '".$username."' AND PASSWORD ='".$password."'";
 	$result = $mysqli->query($sql);
@@ -44,8 +46,8 @@ function checkCrendentials($username,$password) {
 }
 
 function checkDisabled($username,$password) {
-	$mysqli = new mysqli("localhost", "zhangd47", "15021988", "zhangd47mysql2");
-		
+	global $mysqli;
+	
 	// query the users table for name and surname 
 	$sql = "SELECT * FROM `CUSTOMER` WHERE USERNAME = '".$username."' AND PASSWORD ='".$password."'";
 	$result = $mysqli->query($sql);

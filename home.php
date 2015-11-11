@@ -3,12 +3,18 @@
 <head>
 <meta charset="utf-8">
 <title>Quality Hat Shop</title>
+    <link rel="stylesheet" type="text/css" href="Content/bootstrap.min.css">
+    <script src="Scripts/bootstrap.min.js" type="text/javascript"></script>
 	<style>
         .carousel-inner > .item > img, .carousel-inner > .item > a > img
         {
             width: 100%;
             margin: auto;
         }
+		@font-face { font-family: AndaleMono; src: url(Fonts/AndaleMono.ttf); } 
+		body, h1, h2, h3 {
+			font-family: AndaleMono;
+		}
     </style>
 </head>
 

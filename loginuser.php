@@ -1,9 +1,8 @@
 <?php
     ob_start();
-    session_start();
 
 	// include the login function
-   require_once('Functions/functionlogin.php');
+   	require_once('Functions/functionlogin.php');
     
 	// if the user has input username and password
 	if (isset($_POST['username']) and isset($_POST['password'])) {
@@ -20,8 +19,8 @@
 		// call the pre-defined function and check if user is authenticated
 		if (checkCrendentials($_POST['username'], $_POST['password'])) {
 			$_SESSION['flag'] = true;
-			$_SESSION['current_user'] = $_POST['form_username'];
-				
+			$_SESSION['current_user'] = $_POST['username'];
+
 			ob_end_clean();
 			$redirect_page = "http://hyperdisc.unitec.ac.nz/zhangd47/php_assignment/index.php";
 			header("Location: ".$redirect_page);

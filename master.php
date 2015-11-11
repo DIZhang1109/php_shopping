@@ -1,19 +1,20 @@
-
+<?php
+session_start(); //starting session
+?>
 <!doctype html>
 <html>
 <head>
 <meta charset="utf-8">
 <title>Quality Hat Shop</title>
-	<link rel="stylesheet" type="text/css" href="Content/bootstrap-theme.min.css">
+    <link href="Content/bootstrap-theme.min.css" rel="stylesheet" type="text/css" />
+    <link href="Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="Content/bootstrapValidator.min.css" rel="stylesheet" type="text/css" />
     <script src="Scripts/bootstrap.min.js" type="text/javascript"></script>
-    <script src="Scripts/bootstrap.js" type="text/javascript"></script>
     <script src="Scripts/jquery-2.1.4.min.js" type="text/javascript"></script>
+    <script src="Scripts/bootstrap.js" type="text/javascript"></script>
     <script src="Scripts/jquery-2.1.4-vsdoc.js" type="text/javascript"></script>
     <script src="Scripts/jquery-2.1.4.js" type="text/javascript"></script>
-    <link rel="stylesheet" type="text/css" href="Content/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="Content/bootstrapValidator.min.css">
     <script src="Scripts/bootstrapValidator.min.js" type="text/javascript"></script>
-    
     <style type="text/css">
         html
         {
@@ -36,12 +37,9 @@
 		body, h1, h2, h3 {
 			font-family: AndaleMono;
 		}
-		
     </style>
 </head>
 <body>
-
-
 <!-- Navigation -->
 <div id="header">
 	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -71,13 +69,37 @@
 				<!-- Right navigation bar -->
 				<ul class="nav navbar-nav navbar-right">
 					<li>
-						<a href="index.php?content_page=login">Log in</a>
+						<?php
+							//checking if user is not authenticated
+							if (!isset($_SESSION['flag']) || ($_SESSION['flag'] == false))
+							{
+								echo "<a href='index.php?content_page=login'>Login</a>";
+							}
+							else
+							{
+								echo "<a href='index.php?content_page=customerDetail'>Welcome ".$_SESSION['current_user']."</a>
+								<li>
+									<a href='index.php?content_page=userOrder'>Orders</a>
+								</li>
+								<li>
+									<a href='logout.php'>Logout</a>
+								</li>";	
+							}
+						?>
 					</li>
 					<li>
-						<a href="index.php?content_page=register">Register</a>
+                    	<?php
+							//checking if user is not authenticated
+							if (!isset($_SESSION['flag']) || ($_SESSION['flag'] == false))
+							{
+								echo "<a href='index.php?content_page=register'>Register</a>";
+							}
+						?>
 					</li>
 					<li>
-						<a href="index.php?content_page=shoppingcart">Shopping Cart</a>
+						<a href="index.php?content_page=shoppingcart">
+							<img src="Images/shoppingcart.png" alt="Quality Hat" height="20px" width="20px">
+						</a>
 					</li>
 				</ul>
 			</div>
@@ -110,7 +132,8 @@
 	<div class="container">
 		<p class="text-muted" align="center">
 			Copyright &copy; Di Zhang. Hat information comes from
-			<a href="http://www.newyorkhatco.com/">NewYorkHatCo</a></p>
+			<a href="http://www.newyorkhatco.com/">NewYorkHatCo</a>
+		</p>
 	</div>
 </div>
 </body>
