@@ -34,7 +34,7 @@ session_start(); //starting session
             background-color: rgb(255,255,255);
         }
 		@font-face { font-family: AndaleMono; src: url(Fonts/AndaleMono.ttf); } 
-		body, h1, h2, h3 {
+		body, h1, h2, h3, h4 {
 			font-family: AndaleMono;
 		}
     </style>
@@ -77,7 +77,7 @@ session_start(); //starting session
 							}
 							else
 							{
-								echo "<a href='index.php?content_page=customerDetail'>Welcome ".$_SESSION['current_user']."</a>
+								echo "<a href='index.php?content_page=customerDetail'>Welcome <b>".$_SESSION['current_user']."</b></a>
 								<li>
 									<a href='index.php?content_page=userOrder'>Orders</a>
 								</li>
@@ -123,6 +123,9 @@ session_start(); //starting session
 		</div>
 		<div class="col-md-9">
 			<?php include($page_content);?>
+            <br/>
+            <br/>
+            <br/>
 		</div>
 	</div>
 </div>
@@ -136,5 +139,6 @@ session_start(); //starting session
 		</p>
 	</div>
 </div>
+
 </body>
 </html>
