@@ -34,7 +34,7 @@ session_start(); //starting session
             background-color: rgb(255,255,255);
         }
 		@font-face { font-family: AndaleMono; src: url(Fonts/AndaleMono.ttf); } 
-		body, h1, h2, h3, h4 {
+		body, h1, h2, h3, h4, h5 {
 			font-family: AndaleMono;
 		}
     </style>
@@ -97,8 +97,24 @@ session_start(); //starting session
 						?>
 					</li>
 					<li>
-						<a href="index.php?content_page=shoppingcart">
-							<img src="Images/shoppingcart.png" alt="Quality Hat" height="20px" width="20px">
+						<a href="index.php?content_page=cart">
+							<b>
+								<?php
+                                    ob_start(); //set buffer on
+                                    if (isset($_SESSION['cart']))
+                                    {
+                                    $cart = $_SESSION['cart'];
+                                    }
+                                    
+                                    if (!isset($cart) || $cart=='') {
+                                        echo '0';
+                                    } else {
+                                        // Parse the cart session variable
+                                        $items = explode(',',$cart);
+                                        echo count($items);
+                                    }
+                                ?>
+							</b><img src="Images/shoppingcart.png" alt="Quality Hat" height="20px" width="20px">
 						</a>
 					</li>
 				</ul>
