@@ -77,9 +77,9 @@ session_start(); //starting session
 							}
 							else
 							{
-								echo "<a href='index.php?content_page=customerDetail'>Welcome <b>".$_SESSION['current_user']."</b></a>
+								echo "<a href='index.php?content_page=customerdetail'>Welcome <b>".$_SESSION['current_user']."</b></a>
 								<li>
-									<a href='index.php?content_page=userOrder'>Orders</a>
+									<a href='index.php?content_page=customerorder'>Orders</a>
 								</li>
 								<li>
 									<a href='logout.php'>Logout</a>

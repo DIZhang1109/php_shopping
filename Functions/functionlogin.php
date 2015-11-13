@@ -1,6 +1,7 @@
 <?php
 	$mysqli = new mysqli("localhost", "zhangd47", "15021988", "zhangd47mysql2");
 
+	// Check if it is an admin account
 	function checkAdmin($username,$password) {
 		global $mysqli;
 		
@@ -21,8 +22,10 @@
 		} else {
 			return (false);	
 		}
+		$mysqli->close();
 	}
 
+	// Check if user has input correct username and password
 	function checkCrendentials($username,$password) {
 		global $mysqli;
 		
@@ -43,8 +46,10 @@
 		} else {
 			return (false);	
 		}
+		$mysqli->close();
 	}
 	
+	// Check if user has been disabled
 	function checkDisabled($username,$password) {
 		global $mysqli;
 		
@@ -63,5 +68,6 @@
 				}
 			}
 		}
+		$mysqli->close();
 	}
 ?>

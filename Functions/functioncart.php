@@ -11,7 +11,6 @@
 	}
 </script>
 
-
 <?php
 	// Include MySQL class
 	require_once('mysql.class.php');
@@ -67,9 +66,9 @@
 				$output[] = '<td class="col-sm-8"><div class="media"><a class="thumbnail pull-left" href="#"><img class="media-object" src="'.$PATH.'" style="width: 96px; height: 96px;"></a>';
 				$output[] = '<div class="media-body"><h4 class="media-heading">'.$HATNAME.'</h4><span>Status: </span><span class="text-success"><strong>In Stock</strong></span></div></div></td><td class="col-sm-1 col-md-1" style="text-align: center">';
 				$output[] = '<input type="text" class="form-control" name="qty'.$HATID.'" value="'.$qty.'" size="3" maxlength="3" />';
-				$output[] = '<td class="col-sm-1 col-md-1 text-center"><strong>$'.$PRICE.'</strong></td>';
-				$output[] = '<td class="col-sm-1 col-md-1 text-center"><strong>$'.($PRICE * $qty).'</strong></td>';
-				$output[] = '<td class="col-sm-1 col-md-1"><a href="cartprocess.php?action=delete&id='.$HATID.'" class="btn btn-danger">Remove</a></td>';
+				$output[] = '<td class="col-sm-1 text-center"><strong>$'.$PRICE.'</strong></td>';
+				$output[] = '<td class="col-sm-1 text-center"><strong>$'.($PRICE * $qty).'</strong></td>';
+				$output[] = '<td class="col-sm-1"><a href="cartprocess.php?action=delete&id='.$HATID.'" class="btn btn-danger">Remove</a></td>';
 				$output[] = '</tr>';
 				$GST += $PRICE * $qty * 0.15;
 				$subtotal += $PRICE * $qty;
@@ -88,39 +87,45 @@
 	
 	// Write order into the database
 	function submitOrder(){
-		if (isset($_SESSION['cart']))
-		{
+		if (isset($_SESSION['cart'])) {
 			$cart = $_SESSION['cart'];
 		}
-		if(isset($_POST['total'])){
+		if (isset($_POST['total'])) {
 			$total = $_POST['total'];
 		}
-		$username = $_SESSION['current_user'];
-		global $db;
-		$sql = "SELECT `CUSTOMERID` FROM `CUSTOMER` WHERE `USERNAME` = '".$username."'";
-		$result = $db->query($sql);
-		$row = $result->fetch();
-		extract($row);
-		$sql = "INSERT INTO `HATORDER`(`CUSTOMERID`, `STATUS`, `TOTAL`) VALUES (".$CUSTOMERID.",'WAIT','".$total."')";
-		$db->query($sql);
-		$sql = "SELECT @@IDENTITY as ORDERID";
-		$result = $db->query($sql);
-		$row = $result->fetch();
-		extract($row);
-		$order = $ORDERID;
-		
-		$items = explode(',',$cart);
-		$contents = array();
-		foreach ($items as $item) {
-			$contents[$item] = (isset($contents[$item])) ? $contents[$item] + 1 : 1;
+
+		//checking if user is not authenticated
+		if (!isset($_SESSION['flag']) || ($_SESSION['flag'] == false))
+		{
+			return "<script>bootbox.alert('Please log in first!!!');</script>";
+		} else {
+			$username = $_SESSION['current_user'];
+			global $db;
+			$sql = "SELECT `CUSTOMERID` FROM `CUSTOMER` WHERE `USERNAME` = '".$username."'";
+			$result = $db->query($sql);
+			$row = $result->fetch();
+			extract($row);
+			$sql = "INSERT INTO `HATORDER`(`CUSTOMERID`, `STATUS`, `TOTAL`) VALUES (".$CUSTOMERID.",'WAIT','".$total."')";
+			$db->query($sql);
+			$sql = "SELECT @@IDENTITY as ORDERID";
+			$result = $db->query($sql);
+			$row = $result->fetch();
+			extract($row);
+			$order = $ORDERID;
+			
+			$items = explode(',',$cart);
+			$contents = array();
+			foreach ($items as $item) {
+				$contents[$item] = (isset($contents[$item])) ? $contents[$item] + 1 : 1;
+			}
+			foreach ($contents as $id=>$qty) {
+				$sql = "INSERT INTO `ORDERITEM`(`ORDERID`, `ITEMID`, `QUANTITY`) VALUES (".$order.",".$id.",".$qty.")";
+				$db->query($sql);		
+			}
+			
+			$_SESSION['cart']=0;
+			return "<script>bootbox.alert('Congratulations!!! You have placed your order!!!');</script>";
 		}
-		foreach ($contents as $id=>$qty) {
-			$sql = "INSERT INTO `ORDERITEM`(`ORDERID`, `ITEMID`, `QUANTITY`) VALUES (".$order.",".$id.",".$qty.")";
-			$db->query($sql);		
-		}
-		
-		$_SESSION['cart']=0;
-		return "<script>bootbox.alert('Congratulations!!! You have placed your order!!!');</script>";
 	}
 	
 	// Process different cart actions
