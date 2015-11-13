@@ -1,3 +1,7 @@
+<script src="Scripts/bootbox.min.js"></script>
+<script src="Scripts/bootstrap.min.js"></script>
+<script src="Scripts/jquery-2.1.4.min.js"></script>
+
 <?php
 	$mysqli = new mysqli("localhost", "zhangd47", "15021988", "zhangd47mysql2");
 	if ($mysqli->connect_errno) {
@@ -12,7 +16,7 @@
 		if (!$mysqli->query($sql)) {
 			echo "SQL operation failed: (" . $mysqli->errno . ") " . $mysqli->error;
 		} else {
-			echo '<script>alert("Congratulations!!! You\'ve registered successfully!!!");</script>';
+			echo '<script>bootbox.alert("Congratulations!!! You\'ve registered successfully!!!");</script>';
 			// send email to user
 			$to = $_POST['email'];
 			$subject = 'New register on Quality Hats';
@@ -22,8 +26,7 @@
 			echo "<script>window.location.assign('index.php?content_page=home');</script>";
 		}
 	} else {
-		echo '<script>alert("The username has already registered. Please try another one");</script>';
-		echo "<script>window.location.assign('index.php?content_page=register');</script>";
+		echo '<script>bootbox.alert("The username has already registered. Please try another one");</script>';
 		exit;
 	}
 ?>

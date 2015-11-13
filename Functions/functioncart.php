@@ -1,7 +1,32 @@
+<script src="Scripts/bootbox.min.js"></script>
+<script src="Scripts/bootstrap.min.js"></script>
+<script src="Scripts/jquery-2.1.4.min.js"></script>
+
+<script type="text/javascript">
+	function updateCart() {
+    	document.getElementById('cart').action = 'cartprocess.php?action=update';
+	}
+	function checkoutCart() {
+    	document.getElementById('cart').action = 'index.php?content_page=placeorder';
+	}
+</script>
+
+
 <?php
 	// Include MySQL class
 	require_once('mysql.class.php');
+		
+	// Display hat according to the category
+	function displayHat($category) {
+		global $db;
+		$sql = "SELECT * FROM `HAT` WHERE CATEGORY = '".$category."'";
+		$result = $db->query($sql);
+		while ($row = $result->fetch()) {
+			echo '<div class="col-sm-4 col-lg-4 col-md-4"><div class="thumbnail">'.'<img src="'.$row["PATH"].'" alt="Hat" style="width:320px;height:210px">'.'<div class="caption"><h4 class="pull-right"><b>$'.$row["PRICE"].'</b></h4><h4><b>'.$row["HATNAME"].'</b></h4><p>'.$row["HATDESC"].'</p><p><a href="cartprocess.php?action=add&id='.$row['HATID'].'" class="btn btn-primary">Buy Now!</a></p></div></div></div>';
+		}
+	}
 	
+	// Write shopping cart
 	function writeShoppingCart() {
 		if (isset($_SESSION['cart']))
 		{
@@ -18,6 +43,7 @@
 		}
 	}
 	
+	// Show shopping cart
 	function showCart() {
 		global $db;
 		$cart = $_SESSION['cart'];
@@ -30,7 +56,7 @@
 			foreach ($items as $item) {
 				$contents[$item] = (isset($contents[$item])) ? $contents[$item] + 1 : 1;
 			}
-			$output[] = '<div class="col-sm-12"><p class="lead">SHOPPING CART</p><form action="cartprocess.php?action=update" method="post" id="cart">';
+			$output[] = '<div class="col-sm-12"><p class="lead">SHOPPING CART</p><form id="cart" method="post">';
 			$output[] = '<table class="table table-hover"><thead><tr><th>Product</th><th>Quantity</th><th class="text-center">Price</th><th class="text-center">Total</th><th></th></tr></thead><tbody>';
 			foreach ($contents as $HATID=>$qty) {
 				$sql = 'SELECT * FROM HAT WHERE HATID = '.$HATID;
@@ -49,17 +75,55 @@
 				$subtotal += $PRICE * $qty;
 				$total = $GST + $subtotal;
 			}
-			$output[] = '<tr><td>   </td><td>   </td><td>   </td><td><h5>Subtotal</h5></td><td class="text-right"><h5><strong>'.$subtotal.'</strong></h5></td></tr>';
-			$output[] = '<tr><td>   </td><td>   </td><td>   </td><td><h5>GST</h5></td><td class="text-right"><h5><strong>'.$GST.'</strong></h5></td></tr>';
-			$output[] = '<tr><td>   </td><td>   </td><td>   </td><td><h3>Total</h3></td><td class="text-right"><h3><strong>'.$total.'</strong></h3></td></tr>';
-			$output[] = '<tr><td>   </td><td>   </td><td><button type="submit" class="btn btn-default">Update cart</button></td><td><a href="cartprocess.php?action=clear" class="btn btn-danger">Clear Cart</a></td><td><a href="cartprocess.php?action=placeorder" class="btn btn-success">Checkout</a></td></tr>';
+			$output[] = '<tr><td>   </td><td>   </td><td>   </td><td><h5>Subtotal</h5></td><td class="text-right"><h5><strong>$'.$subtotal.'</strong></h5></td></tr>';
+			$output[] = '<tr><td>   </td><td>   </td><td>   </td><td><h5>GST</h5></td><td class="text-right"><h5><strong>$'.$GST.'</strong></h5></td></tr>';
+			$output[] = '<tr><td><input type="hidden" name="total" value="'.$total.'" /></td><td>   </td><td>   </td><td><h3>Total</h3></td><td class="text-right"><h3><strong>$'.$total.'</strong></h3></td></tr>';
+			$output[] = '<tr><td>   </td><td>   </td><td><input type="submit" class="btn btn-default" value="Update Cart" onclick="updateCart();return true;" /></td><td><a href="cartprocess.php?action=clear" class="btn btn-danger">Clear Cart</a></td><td><input type="submit" class="btn btn-success" value="Checkout" onclick="checkoutCart();return true;" /></td></tr>';
 			$output[] = '</tbody></table></form></div>';
 		} else {
 			$output[] = '<p>You shopping cart is empty.</p>';
 		}
 		return join('',$output);
 	}
-
+	
+	// Write order into the database
+	function submitOrder(){
+		if (isset($_SESSION['cart']))
+		{
+			$cart = $_SESSION['cart'];
+		}
+		if(isset($_POST['total'])){
+			$total = $_POST['total'];
+		}
+		$username = $_SESSION['current_user'];
+		global $db;
+		$sql = "SELECT `CUSTOMERID` FROM `CUSTOMER` WHERE `USERNAME` = '".$username."'";
+		$result = $db->query($sql);
+		$row = $result->fetch();
+		extract($row);
+		$sql = "INSERT INTO `HATORDER`(`CUSTOMERID`, `STATUS`, `TOTAL`) VALUES (".$CUSTOMERID.",'WAIT','".$total."')";
+		$db->query($sql);
+		$sql = "SELECT @@IDENTITY as ORDERID";
+		$result = $db->query($sql);
+		$row = $result->fetch();
+		extract($row);
+		$order = $ORDERID;
+		
+		$items = explode(',',$cart);
+		$contents = array();
+		foreach ($items as $item) {
+			$contents[$item] = (isset($contents[$item])) ? $contents[$item] + 1 : 1;
+		}
+		foreach ($contents as $id=>$qty) {
+			$sql = "INSERT INTO `ORDERITEM`(`ORDERID`, `ITEMID`, `QUANTITY`) VALUES (".$order.",".$id.",".$qty.")";
+			$db->query($sql);		
+		}
+		
+		$_SESSION['cart']=0;
+		return "<script>bootbox.alert('Congratulations!!! You have placed your order!!!');</script>";
+	}
+	
+	// Process different cart actions
 	function processActions() {
 		if (isset($_SESSION['cart']))
 		{
@@ -133,15 +197,5 @@
 		}
 		$_SESSION['cart'] = $cart;
 		//echo $cart;
-	}
-	
-	//display hat according to the category
-	function displayHat($category) {
-		global $db;
-		$sql = "SELECT * FROM `HAT` WHERE CATEGORY = '".$category."'";
-		$result = $db->query($sql);
-		while ($row = $result->fetch()) {
-			echo '<div class="col-sm-4 col-lg-4 col-md-4"><div class="thumbnail">'.'<img src="'.$row["PATH"].'" alt="Hat" style="width:320px;height:210px">'.'<div class="caption"><h4 class="pull-right"><b>$'.$row["PRICE"].'</b></h4><h4><b>'.$row["HATNAME"].'</b></h4><p>'.$row["HATDESC"].'</p><p><a href="cartprocess.php?action=add&id='.$row['HATID'].'" class="btn btn-primary">Buy Now!</a></p></div></div></div>';
-		}
 	}
 ?>
