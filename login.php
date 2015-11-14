@@ -16,9 +16,6 @@
 		// call the pre-defined function and check if admin is authenticated
 		if(checkAdmin($_POST['username'], $_POST['password'])){
 			$_SESSION['admin'] = true;
-			$redirect_page = "http://hyperdisc.unitec.ac.nz/zhangd47/php_assignment/admin.php";
-			header("Location: ".$redirect_page);
-			exit;
 		}
 		// call the pre-defined function and check if user is authenticated
 		if (checkCrendentials($_POST['username'], $_POST['password'])) {

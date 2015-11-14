@@ -38,7 +38,7 @@
 			}
 			$output[] = "</tbody></table></div>";
 		} else {
-			echo 'error!!!';
+			$output[] ="<p>You don't have any orders currently...</p>";
 		}
 		return join('',$output);
 		$mysqli->close();

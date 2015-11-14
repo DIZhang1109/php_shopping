@@ -9,12 +9,14 @@ session_start(); //starting session
     <link href="Content/bootstrap-theme.min.css" rel="stylesheet" type="text/css" />
     <link href="Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="Content/bootstrapValidator.min.css" rel="stylesheet" type="text/css" />
+    <link href="Content/fileinput.min.css"rel="stylesheet" type="text/css" />
     <script src="Scripts/bootstrap.min.js" type="text/javascript"></script>
     <script src="Scripts/jquery-2.1.4.min.js" type="text/javascript"></script>
     <script src="Scripts/bootstrap.js" type="text/javascript"></script>
     <script src="Scripts/jquery-2.1.4-vsdoc.js" type="text/javascript"></script>
     <script src="Scripts/jquery-2.1.4.js" type="text/javascript"></script>
     <script src="Scripts/bootstrapValidator.min.js" type="text/javascript"></script>
+    <script src="Scripts/fileinput.min.js" type="text/javascript"></script>
     <style type="text/css">
         html
         {
@@ -74,9 +76,12 @@ session_start(); //starting session
 							if (!isset($_SESSION['flag']) || ($_SESSION['flag'] == false))
 							{
 								echo "<a href='index.php?content_page=login'>Login</a>";
-							}
-							else
-							{
+							} elseif ($_SESSION['admin'] == true) {
+								echo "<a href='#'>Administrator</a>
+								<li>
+									<a href='logout.php'>Logout</a>
+								</li>";
+							} else {
 								echo "<a href='index.php?content_page=customerdetail'>Welcome <b>".$_SESSION['current_user']."</b></a>
 								<li>
 									<a href='index.php?content_page=customerorder'>Orders</a>
@@ -101,9 +106,8 @@ session_start(); //starting session
 							<b>
 								<?php
                                     ob_start(); //set buffer on
-                                    if (isset($_SESSION['cart']))
-                                    {
-                                    $cart = $_SESSION['cart'];
+                                    if (isset($_SESSION['cart'])) {
+	                                    $cart = $_SESSION['cart'];
                                     }
                                     
                                     if (!isset($cart) || $cart=='') {
@@ -130,11 +134,29 @@ session_start(); //starting session
 	<div class="row">
 		<div class="col-md-3">
 			<div class="list-group">
-				<a href="index.php?content_page=vintage" class="list-group-item">Vintage</a>
-				<a href="index.php?content_page=knit" class="list-group-item">Knit & Bear</a>
-				<a href="index.php?content_page=trucker" class="list-group-item">Trucker</a>
-				<a href="index.php?content_page=leather" class="list-group-item">Leather</a>
-				<a href="index.php?content_page=ladies" class="list-group-item">Ladies</a>
+            	<?php
+					//checking if user is not authenticated
+					if (!isset($_SESSION['flag']) || ($_SESSION['flag'] == false))
+					{
+						echo '<a href="index.php?content_page=vintage" class="list-group-item">Vintage</a>
+							<a href="index.php?content_page=knit" class="list-group-item">Knit & Bear</a>
+							<a href="index.php?content_page=trucker" class="list-group-item">Trucker</a>
+							<a href="index.php?content_page=leather" class="list-group-item">Leather</a>
+							<a href="index.php?content_page=ladies" class="list-group-item">Ladies</a>';
+					} elseif ($_SESSION['admin'] == true) {
+						echo '<a href="index.php?content_page=managecustomer" class="list-group-item">Customer Management</a>
+							<a href="index.php?content_page=manageorder" class="list-group-item">Order Management</a>
+							<a href="index.php?content_page=managehat" class="list-group-item">Hat Management</a>
+							<a href="index.php?content_page=managecategory" class="list-group-item">Category Management</a>
+							<a href="index.php?content_page=managesupplier" class="list-group-item">Supplier Management</a>';
+					} else {
+						echo '<a href="index.php?content_page=vintage" class="list-group-item">Vintage</a>
+							<a href="index.php?content_page=knit" class="list-group-item">Knit & Bear</a>
+							<a href="index.php?content_page=trucker" class="list-group-item">Trucker</a>
+							<a href="index.php?content_page=leather" class="list-group-item">Leather</a>
+							<a href="index.php?content_page=ladies" class="list-group-item">Ladies</a>';	
+					}
+				?>
 			</div>
 		</div>
 		<div class="col-md-9">

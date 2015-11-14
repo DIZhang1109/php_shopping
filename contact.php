@@ -49,18 +49,11 @@
             }
         });
     });
-
-    function btnSubmit_OnClick() {
-        if (confirm("Do you want to submit the message now?")) {
-            alert('Thanks for you reply!!!');
-            window.location.href = 'index.php?content_page=home';
-        }
-    }
 </script>
 
 <div class="col-md-6 col-md-offset-3">
     <div class="form-area">
-        <form role="form" id="frmContact">
+        <form role="form" id="frmContact" method="post" action="index.php?content_page=contactuser">
         <h2 style="margin-bottom: 25px; text-align: center;">
             Contact Us</h2>
             <div class="form-group">
@@ -76,7 +69,7 @@
                     required>
             </div>
             <div class="form-group">
-                <input type="text" class="form-control" id="subject" name="phone" placeholder="Phone"
+                <input type="text" class="form-control" id="phone" name="phone" placeholder="Phone"
                     required>
             </div>
             <div class="form-group">
@@ -84,10 +77,10 @@
                     required>
             </div>
             <div class="form-group">
-                <textarea class="form-control" id="message" placeholder="Message"
-                    maxlength="140" rows="7"></textarea>
+                <textarea class="form-control" id="message" name="message" placeholder="Message"
+                    maxlength="1400" rows="7"></textarea>
             </div>
-            <input class="btn btn-primary pull-right" type="submit" id="submit" name="submit" value="Submit Form" onclick="btnSubmit_OnClick()">
+            <input class="btn btn-primary pull-right" type="submit" value="Submit Form">
         </form>
     </div>
 </div>
