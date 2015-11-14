@@ -45,7 +45,7 @@
 	// Show shopping cart
 	function showCart() {
 		global $db;
-		$cart = $_SESSION['cart'];
+		$cart = (isset($_SESSION['cart']) ? $_SESSION['cart'] : null);
 		if ($cart) {
 			$items = explode(',',$cart);
 			$contents = array();
